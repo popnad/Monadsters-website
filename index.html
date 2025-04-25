@@ -69,7 +69,6 @@
       font-weight: bold;
     }
 
-
     /* DogOS window */
     .boot-box {
       background: purple;
@@ -116,7 +115,6 @@
       box-sizing: border-box;
     }
 
-
     .icon {
       display: flex;
       flex-direction: column;
@@ -124,14 +122,10 @@
       cursor: pointer;
     }
 
-
-
-
     .icon img {
       width: 60px;
       height: 60px;
       border-radius: 8px;
-
     }
 
     .icon span {
@@ -185,57 +179,55 @@
       height: auto;
       object-fit: contain;
     }
-   
-   
-.custom-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 8px;
-  background-color: #444;
-  border-radius: 4px;
-  outline: none;
-  border: none;
-  background-image: linear-gradient(to right, #2196f3 var(--progress, 0%), #444 var(--progress, 0%));
-}
 
-/* Track - Safari & Chrome */
-.custom-slider::-webkit-slider-runnable-track {
-  height: 8px;
-  background: transparent;
-  border-radius: 4px;
-}
+    .custom-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background-color: #444;
+      border-radius: 4px;
+      outline: none;
+      border: none;
+      background-image: linear-gradient(to right, #2196f3 var(--progress, 0%), #444 var(--progress, 0%));
+    }
 
-/* Thumb - Safari & Chrome */
-.custom-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: #2196f3;
-  border: 2px solid white;
-  cursor: pointer;
-  margin-top: -3px; /* igazítás a sávhoz */
-}
+    /* Track - Safari & Chrome */
+    .custom-slider::-webkit-slider-runnable-track {
+      height: 8px;
+      background: transparent;
+      border-radius: 4px;
+    }
 
-/* Track - Firefox */
-.custom-slider::-moz-range-track {
-  height: 8px;
-  background: transparent;
-  border-radius: 4px;
-}
+    /* Thumb - Safari & Chrome */
+    .custom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: #2196f3;
+      border: 2px solid white;
+      cursor: pointer;
+      margin-top: -3px; /* igazítás a sávhoz */
+    }
 
-/* Thumb - Firefox */
-.custom-slider::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: #2196f3;
-  border: 2px solid white;
-  cursor: pointer;
-}
+    /* Track - Firefox */
+    .custom-slider::-moz-range-track {
+      height: 8px;
+      background: transparent;
+      border-radius: 4px;
+    }
 
+    /* Thumb - Firefox */
+    .custom-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: #2196f3;
+      border: 2px solid white;
+      cursor: pointer;
+    }
 
     .market-entry {
       display: flex;
@@ -347,7 +339,6 @@
       z-index: 1000;
     }
 
-
     @keyframes fall {
       0% {
         top: 0;
@@ -370,7 +361,6 @@
       }
     }
 
-
     @keyframes spin-left {
       from {
         transform: rotate(0deg);
@@ -388,7 +378,6 @@
     .spin-left {
       animation: fall 1.5s linear forwards, spin-left 1.5s linear;
     }
-
 
     .clicker-content {
       height: 100%;
@@ -483,16 +472,11 @@
   <!-- Fejlécben a szükséges script-ek betöltése React és Web3 számára -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
-
   <!-- WalletConnect provider és Web3.js CDN-ekről -->
   <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/web3@1.7.5/dist/web3.min.js"></script>
 </head>
-
-
-
 
 <body>
   <div id="root"></div>
@@ -594,13 +578,7 @@
       );
     }
 
-
-    // A komponenst rendereljük az OS ablak div-jébe
     const { useState, useEffect, useRef } = React;
-   
-   
-
-
 
     const loadingLines = [
       "Summoning Monadsters from the void...",
@@ -641,7 +619,6 @@
       "Hotdrop inbound... monsters ready to roll",
       "Final boss is watching you load "
     ];
-
 
     const LoadingText = ({ onDone }) => {
       const [lines, setLines] = useState([]);
@@ -719,71 +696,72 @@
         </div>
       );
     };
+
     const PartnersWindow = ({ onClose }) => {
-  const images = ["thoon.png","thoon.png"];
-  const [current, setCurrent] = useState(0);
-  const [pos, setPos] = useState({ x: 900, y: 800 });
-  const dragging = useRef(false);
-  const offset = useRef({ x: 0, y: 0 });
+      const images = ["thoon.png", "thoon.png"];
+      const [current, setCurrent] = useState(0);
+      const [pos, setPos] = useState({ x: 900, y: 800 });
+      const dragging = useRef(false);
+      const offset = useRef({ x: 0, y: 0 });
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % images.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
+      useEffect(() => {
+        const interval = setInterval(() => {
+          setCurrent((prev) => (prev + 1) % images.length);
+        }, 2000);
+        return () => clearInterval(interval);
+      }, []);
 
-  const down = (e) => {
-    dragging.current = true;
-    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
-  };
+      const down = (e) => {
+        dragging.current = true;
+        offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
+      };
 
-  const move = (e) => {
-    if (dragging.current) {
-      setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y });
-    }
-  };
+      const move = (e) => {
+        if (dragging.current) {
+          setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y });
+        }
+      };
 
-  const up = () => dragging.current = false;
+      const up = () => dragging.current = false;
 
-  useEffect(() => {
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mouseup", up);
-    return () => {
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("mouseup", up);
+      useEffect(() => {
+        window.addEventListener("mousemove", move);
+        window.addEventListener("mouseup", up);
+        return () => {
+          window.removeEventListener("mousemove", move);
+          window.removeEventListener("mouseup", up);
+        };
+      }, []);
+
+      return (
+        <div className="window" style={{
+          position: "absolute",
+          left: pos.x,
+          top: pos.y,
+          width: 320,
+          height: 140,
+          zIndex: 9999
+        }}>
+          <div className="window-header" onMouseDown={down}>
+            <span>Partners</span>
+            <button onClick={onClose}>✖</button>
+          </div>
+          <div style={{
+            flex: 1,
+            background: "black",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "8px"
+          }}>
+            <img src={`partners/${images[current]}`} alt="partner" style={{
+              maxWidth: "100%",
+              maxHeight: "100%"
+            }} />
+          </div>
+        </div>
+      );
     };
-  }, []);
-
-  return (
-    <div className="window" style={{
-      position: "absolute",
-      left: pos.x,
-      top: pos.y,
-      width: 320,
-      height: 140,
-      zIndex: 9999
-    }}>
-      <div className="window-header" onMouseDown={down}>
-        <span>Partners</span>
-        <button onClick={onClose}>✖</button>
-      </div>
-      <div style={{
-        flex: 1,
-        background: "black",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "8px"
-      }}>
-        <img src={`partners/${images[current]}`} alt="partner" style={{
-          maxWidth: "100%",
-          maxHeight: "100%"
-        }} />
-      </div>
-    </div>
-  );
-};
 
     const fetchMarketData = async () => {
       const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd");
@@ -816,60 +794,55 @@
       { id: "pumpit", name: "Pump It", icon: "nft.png" },
       { id: "wallet", name: "Wallet", icon: "wallet.png" },
       { id: "quest", name: "Quest", icon: "quest.png" },
-     
-
     ];
 
-
     const DraggableWindow = ({ id, name, onClose, content, defaultSize }) => {
-  const [pos, setPos] = useState({ x: 100, y: 100 });
-  const [size, setSize] = useState(defaultSize || { width: 500, height: 400 }); // most már használja a defaultSize propot!
-  const dragging = useRef(false);
-  const offset = useRef({ x: 0, y: 0 });
+      const [pos, setPos] = useState({ x: 100, y: 100 });
+      const [size, setSize] = useState(defaultSize || { width: 500, height: 400 });
+      const dragging = useRef(false);
+      const offset = useRef({ x: 0, y: 0 });
 
-  const down = e => {
-    dragging.current = true;
-    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
-  };
+      const down = e => {
+        dragging.current = true;
+        offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
+      };
 
-  const move = e => {
-    if (dragging.current) {
-      setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y });
-    }
-  };
+      const move = e => {
+        if (dragging.current) {
+          setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y });
+        }
+      };
 
-  const up = () => dragging.current = false;
+      const up = () => dragging.current = false;
 
-  useEffect(() => {
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mouseup", up);
-    return () => {
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("mouseup", up);
+      useEffect(() => {
+        window.addEventListener("mousemove", move);
+        window.addEventListener("mouseup", up);
+        return () => {
+          window.removeEventListener("mousemove", move);
+          window.removeEventListener("mouseup", up);
+        };
+      }, []);
+
+      return (
+        <div className="window" style={{ left: pos.x, top: pos.y, width: size.width, height: size.height }}>
+          <div className="window-header" onMouseDown={down}>
+            <span>{name}</span>
+            <button onClick={() => onClose(id)}>✖</button>
+          </div>
+          <div className="window-content">{content}</div>
+        </div>
+      );
     };
-  }, []);
-
-  return (
-    <div className="window" style={{ left: pos.x, top: pos.y, width: size.width, height: size.height }}>
-      <div className="window-header" onMouseDown={down}>
-        <span>{name}</span>
-        <button onClick={() => onClose(id)}>✖</button>
-      </div>
-      <div className="window-content">{content}</div>
-    </div>
-  );
-};
 
     const HonoraryGallery = () => {
       const [search, setSearch] = useState("");
       const [modalImage, setModalImage] = useState(null);
 
-      // Fájlnév alapján képek betöltése a public/honorary mappából
       const imageNames = [
         "cryptunez.png",
         "crexsol.png",
         "keone.png"
-        // Ide jöhetnek még új fájlnevek
       ];
 
       const filtered = imageNames.filter((name) =>
@@ -938,7 +911,6 @@
             })}
           </div>
 
-          {/* Kattintható nagy kép megjelenítés modalban */}
           {modalImage && (
             <div onClick={() => setModalImage(null)} style={{
               position: "fixed",
@@ -964,7 +936,6 @@
         </div>
       );
     };
-
 
     const NFTBuilderApp = () => {
       const layers = [
@@ -1042,7 +1013,6 @@
         link.href = canvas.toDataURL("image/png");
         link.click();
 
-        // Quest aktiválás
         const wallet = localStorage.getItem("walletAddress");
         if (wallet) {
           const data = JSON.parse(localStorage.getItem(`quests_${wallet}`)) || {};
@@ -1050,8 +1020,6 @@
           localStorage.setItem(`quests_${wallet}`, JSON.stringify(data));
         }
       };
-
-
 
       return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
@@ -1105,10 +1073,6 @@
       );
     };
 
-
-
-
-    // Add this new component above the Desktop component in the script
     const PumpItGame = () => {
       const [clicks, setClicks] = useState(0);
       const containerRef = useRef();
@@ -1126,7 +1090,6 @@
         setClicks((prev) => {
           const updated = prev + 1;
 
-          // Quest és Clicks mentés
           if (wallet) {
             const data = JSON.parse(localStorage.getItem(`quests_${wallet}`)) || {};
             data.clicks = updated;
@@ -1137,7 +1100,6 @@
           return updated;
         });
 
-        // Particle animáció
         const img = document.createElement("img");
         img.src = "nftparticle.png";
         const spinClass = Math.random() > 0.5 ? "spin-right" : "spin-left";
@@ -1165,6 +1127,7 @@
       const [marketOpened, setMarketOpened] = React.useState(false);
       const [xp, setXp] = React.useState(0);
       const [completed, setCompleted] = React.useState([]);
+
       const checkQuest = () => {
         if (!completed.includes("buildNFT") && localStorage.getItem(`quests_${wallet}`)) {
           const data = JSON.parse(localStorage.getItem(`quests_${wallet}`));
@@ -1209,7 +1172,6 @@
           ...updates
         };
 
-
         if (wallet) {
           localStorage.setItem(`quests_${wallet}`, JSON.stringify(newData));
         }
@@ -1232,11 +1194,9 @@
         }
       }, []);
 
-      // figyeli a változást, hogy bármikor új quest teljesüljön
       React.useEffect(() => {
         checkQuest();
       }, [clicks, marketOpened]);
-
 
       const getQuestStatus = (id) => completed.includes(id) ? "✅" : "❌";
 
@@ -1250,8 +1210,7 @@
               <ul>
                 <li>{getQuestStatus("100clicks")} Reach 100 Clicks in Pump It ({clicks}/100)</li>
                 <li>{getQuestStatus("openMarket")} Open the Market App</li>
-                <li>{getQuestStatus("buildNFT")} Build and Download an NFT</li>
-
+ захист                <li>{getQuestStatus("buildNFT")} Build and Download an NFT</li>
               </ul>
             </>
           ) : (
@@ -1260,7 +1219,6 @@
         </div>
       );
     };
-
 
     const FaucetApp = () => {
       const [wallet, setWallet] = React.useState(null);
@@ -1343,517 +1301,570 @@
       );
     };
 
+    const StakeApp = () => {
+      const [wallet, setWallet] = React.useState(null);
+      const [balance, setBalance] = React.useState("0");
+      const [stakedBalance, setStakedBalance] = React.useState("0");
+      const [approveAmount, setApproveAmount] = React.useState("");
+      const [stakeAmount, setStakeAmount] = React.useState("");
+      const [unstakeAmount, setUnstakeAmount] = React.useState("");
+      const [status, setStatus] = React.useState("");
+      const [lockupEnd, setLockupEnd] = React.useState(null);
+      const [timeLeft, setTimeLeft] = React.useState(null);
 
-const StakeApp = () => {
-  const [wallet, setWallet] = React.useState(null);
-  const [balance, setBalance] = React.useState("0");
-  const [stakedBalance, setStakedBalance] = React.useState("0");
-  const [approveAmount, setApproveAmount] = React.useState("");
-  const [stakeAmount, setStakeAmount] = React.useState("");
-  const [unstakeAmount, setUnstakeAmount] = React.useState("");
-  const [status, setStatus] = React.useState("");
-  const [lockupEnd, setLockupEnd] = React.useState(null);
-  const [timeLeft, setTimeLeft] = React.useState(null);
- 
-  const STAKING_CONTRACT_ADDRESS = "0x5dbfc4D0B75570aA610D7F0E913f37d62b81d9c3";
-  const TOKEN_ADDRESS = "0x0137cF961eFb6CD90BeAD8B1BC7893f640A63aD8";
-  const STAKING_ABI = [
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
+      const STAKING_CONTRACT_ADDRESS = "0x5dbfc4D0B75570aA610D7F0E913f37d62b81d9c3";
+      const TOKEN_ADDRESS = "0x0137cF961eFb6CD90BeAD8B1BC7893f640A63aD8";
+      const STAKING_ABI = [
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
         },
         {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "Staked",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "Unstaked",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_user",
-          "type": "address"
-        }
-      ],
-      "name": "getStakedBalance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "stake",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "stakes",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "stakingToken",
-      "outputs": [
-        {
-          "internalType": "contract IERC20",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "totalStaked",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "unstake",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ];
-  const TOKEN_ABI = [
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "_owner",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
-      "outputs": [
-        {
-          "name": "balance",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "_spender",
-          "type": "address"
-        },
-        {
-          "name": "_value",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ];
- 
-  React.useEffect(() => {
-    const savedWallet = localStorage.getItem("walletAddress");
-    if (savedWallet) {
-      setWallet(savedWallet);
-      fetchBalances(savedWallet);
-      const lockupData = localStorage.getItem(`lockup_${savedWallet}`);
-      if (lockupData) {
-        setLockupEnd(parseInt(lockupData));
-      }
-    }
-  }, []);
- 
-  React.useEffect(() => {
-    if (lockupEnd) {
-      const timer = setInterval(() => {
-        const now = Math.floor(Date.now() / 1000);
-        const timeRemaining = lockupEnd - now;
-        if (timeRemaining <= 0) {
-          setTimeLeft(null);
-          clearInterval(timer);
-        } else {
-          const days = Math.floor(timeRemaining / (24 * 60 * 60));
-          const hours = Math.floor((timeRemaining % (24 * 60 * 60)) / (60 * 60));
-          const minutes = Math.floor((timeRemaining % (60 * 60)) / 60);
-          const seconds = timeRemaining % 60;
-          setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-        }
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [lockupEnd]);
- 
-  const switchToMonadTestnet = async () => {
-    try {
-      await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x101bf" }], // 41455 in hex
-      });
-    } catch (switchError) {
-      if (switchError.code === 4902) {
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [
+          "anonymous": false,
+          "inputs": [
             {
-              chainId: "10143",
-              chainName: "Monad Testnet",
-              rpcUrls: ["https://testnet-rpc.monad.xyz"],
-              nativeCurrency: {
-                name: "MON",
-                symbol: "MON",
-                decimals: 18,
-              },
-              blockExplorerUrls: ["https://explorer.testnet.monad.xyz"],
+              "indexed": true,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
             },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
           ],
-        });
-      } else {
-        throw switchError;
-      }
-    }
-  };
- 
-  const fetchBalances = async (userAddress) => {
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, provider);
-      const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, provider);
- 
-      const tokenBalance = await tokenContract.balanceOf(userAddress);
-      const staked = await stakingContract.getStakedBalance(userAddress);
- 
-      setBalance(ethers.formatEther(tokenBalance));
-      setStakedBalance(ethers.formatEther(staked));
-    } catch (err) {
-      console.error("Error fetching balances:", err);
-      setStatus("❌ Error fetching balances");
-    }
-  };
- 
-  const handleApprove = async () => {
-    if (!wallet) {
-      setStatus("❌ Connect wallet first");
-      return;
-    }
-    if (!approveAmount || isNaN(approveAmount) || approveAmount <= 0) {
-      setStatus("❌ Enter a valid amount");
-      return;
-    }
- 
-    try {
-      await switchToMonadTestnet();
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, signer);
- 
-      setStatus("⏳ Approving tokens...");
-      const amountWei = ethers.parseEther(approveAmount);
-      const tx = await tokenContract.approve(STAKING_CONTRACT_ADDRESS, amountWei);
-      await tx.wait();
-      setStatus("✅ Approval successful!");
-    } catch (err) {
-      console.error("Approval error:", err);
-      setStatus("❌ Approval failed: " + err.message);
-    }
-  };
- 
-  const handleStake = async () => {
-    if (!wallet) {
-      setStatus("❌ Connect wallet first");
-      return;
-    }
-    if (!stakeAmount || isNaN(stakeAmount) || stakeAmount <= 0) {
-      setStatus("❌ Enter a valid amount");
-      return;
-    }
- 
-    try {
-      await switchToMonadTestnet();
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, signer);
- 
-      setStatus("⏳ Staking tokens...");
-      const amountWei = ethers.parseEther(stakeAmount);
-      const tx = await stakingContract.stake(amountWei);
-      await tx.wait();
- 
-      // Set 7-day lockup
-      const lockupEndTime = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60; // 7 days in seconds
-      localStorage.setItem(`lockup_${wallet}`, lockupEndTime.toString());
-      setLockupEnd(lockupEndTime);
- 
-      await fetchBalances(wallet);
-      setStatus("✅ Staking successful!");
-    } catch (err) {
-      console.error("Staking error:", err);
-      setStatus("❌ Staking failed: " + err.message);
-    }
-  };
- 
-  const handleUnstake = async () => {
-    if (!wallet) {
-      setStatus("❌ Connect wallet first");
-      return;
-    }
-    if (!unstakeAmount || isNaN(unstakeAmount) || unstakeAmount <= 0) {
-      setStatus("❌ Enter a valid amount");
-      return;
-    }
-    if (lockupEnd && Math.floor(Date.now() / 1000) < lockupEnd) {
-      setStatus("❌ Tokens are locked until the timer expires");
-      return;
-    }
- 
-    try {
-      await switchToMonadTestnet();
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, signer);
- 
-      setStatus("⏳ Unstaking tokens...");
-      const amountWei = ethers.parseEther(unstakeAmount);
-      const tx = await stakingContract.unstake(amountWei);
-      await tx.wait();
- 
-      // Reset lockup if all tokens are unstaked
-      if (parseFloat(stakedBalance) - parseFloat(unstakeAmount) <= 0) {
-        localStorage.removeItem(`lockup_${wallet}`);
-        setLockupEnd(null);
-        setTimeLeft(null);
-      }
- 
-      await fetchBalances(wallet);
-      setStatus("✅ Unstaking successful!");
-    } catch (err) {
-      console.error("Unstaking error:", err);
-      setStatus("❌ Unstaking failed: " + err.message);
-    }
-  };
- 
-  return (
-    <div style={{
-      fontFamily: "monospace",
-      color: "#111",
-      padding: "20px",
-      display: "flex",
-      flexDirection: "column",
-      gap: "15px",
-      height: "100%"
-    }}>
-      <h3 style={{ "0", fontSize: "18px", color: "#222" }}>Stake Tokens</h3>
-      {wallet ? (
-        <>
-          <div style={{ background: "#f0f0f0", padding: "10px", borderRadius: "6px" }}>
-            <p style={{ "5px 0", fontSize: "14px" }}>
-              <strong>Wallet:</strong> {wallet.slice(0, 6)}...{wallet.slice(-4)}
-            </p>
-            <p style={{ "5px 0", fontSize: "14px" }}>
-              <strong>Token Balance:</strong> {parseFloat(balance).toFixed(2)} Tokens
-            </p>
-            <p style={{ "5px 0", fontSize: "14px" }}>
-              <strong>Staked Balance:</strong> {parseFloat(stakedBalance).toFixed(2)} Tokens
-            </p>
-          </div>
- 
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <input
-                type="number"
-                value={approveAmount}
-                onChange={(e) => setApproveAmount(e.target.value)}
-                placeholder="Amount to approve"
-                style={{
-                  padding: "8px",
-                  fontSize: "14px",
-                  border: "1px solid #888",
-                  borderRadius: "4px",
-                  background: "#f0f0f0",
-                  flex: "1"
-                }}
-              />
-              <button onClick={handleApprove} style={{
-                padding: "8px 16px",
+          "name": "Staked",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "Unstaked",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "name": "getStakedBalance",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "stake",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "stakes",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "stakingToken",
+          "outputs": [
+            {
+              "internalType": "contract IERC20",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "totalStaked",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "unstake",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ];
+      const TOKEN_ABI = [
+        {
+          "constant": true,
+          "inputs": [
+            {
+              "name": "_owner",
+              "type": "address"
+            }
+          ],
+          "name": "balanceOf",
+          "outputs": [
+            {
+              "name": "balance",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "_spender",
+              "type": "address"
+            },
+            {
+              "name": "_value",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ];
+
+      React.useEffect(() => {
+        const savedWallet = localStorage.getItem("walletAddress");
+        if (savedWallet) {
+          setWallet(savedWallet);
+          fetchBalances(savedWallet);
+          const lockupData = localStorage.getItem(`lockup_${savedWallet}`);
+          if (lockupData) {
+            setLockupEnd(parseInt(lockupData));
+          }
+        }
+      }, []);
+
+      React.useEffect(() => {
+        if (lockupEnd) {
+          const timer = setInterval(() => {
+            const now = Math.floor(Date.now() / 1000);
+            const timeRemaining = lockupEnd - now;
+            if (timeRemaining <= 0) {
+              setTimeLeft(null);
+              clearInterval(timer);
+            } else {
+              const days = Math.floor(timeRemaining / (24 * 60 * 60));
+              const hours = Math.floor((timeRemaining % (24 * 60 * 60)) / (60 * 60));
+              const minutes = Math.floor((timeRemaining % (60 * 60)) / 60);
+              const seconds = timeRemaining % 60;
+              setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+            }
+          }, 1000);
+          return () => clearInterval(timer);
+        }
+      }, [lockupEnd]);
+
+      React.useEffect(() => {
+        if (window.ethereum) {
+          const handleChainChanged = (chainId) => {
+            if (chainId !== "0x27CF") {
+              setStatus("⚠️ Please switch to Monad Testnet");
+              setWallet(null);
+              localStorage.removeItem("walletAddress");
+            } else {
+              const savedWallet = localStorage.getItem("walletAddress");
+              if (savedWallet) {
+                setWallet(savedWallet);
+                fetchBalances(savedWallet);
+              }
+            }
+          };
+
+          window.ethereum.on("chainChanged", handleChainChanged);
+
+          return () => {
+            window.ethereum.removeListener("chainChanged", handleChainChanged);
+          };
+        }
+      }, []);
+
+      const connectWallet = async () => {
+        if (window.ethereum) {
+          try {
+            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            const walletAddress = accounts[0];
+            setWallet(walletAddress);
+            localStorage.setItem("walletAddress", walletAddress);
+            fetchBalances(walletAddress);
+          } catch (err) {
+            console.error("MetaMask connection error:", err);
+            setStatus("❌ MetaMask connection failed: " + err.message);
+          }
+        } else {
+          setStatus("❌ MetaMask not detected. Please install MetaMask.");
+        }
+      };
+
+      const switchToMonadTestnet = async () => {
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x27CF" }], // 10143 in hex
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: "0x27CF", // 10143 in hex
+                  chainName: "Monad Testnet",
+                  rpcUrls: ["https://testnet-rpc.monad.xyz"],
+                  nativeCurrency: {
+                    name: "MON",
+                    symbol: "MON",
+                    decimals: 18,
+                  },
+                  blockExplorerUrls: ["https://explorer.testnet.monad.xyz"],
+                },
+              ],
+            });
+          } else {
+            throw switchError;
+          }
+        }
+      };
+
+      const fetchBalances = async (userAddress) => {
+        try {
+          await switchToMonadTestnet();
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, provider);
+          const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, provider);
+
+          const tokenBalance = await tokenContract.balanceOf(userAddress);
+          const staked = await stakingContract.getStakedBalance(userAddress);
+
+          setBalance(ethers.formatEther(tokenBalance));
+          setStakedBalance(ethers.formatEther(staked));
+        } catch (err) {
+          console.error("Error fetching balances:", err);
+          setStatus("❌ Error fetching balances: " + err.message);
+        }
+      };
+
+      const handleApprove = async () => {
+        if (!wallet) {
+          setStatus("❌ Connect wallet first");
+          return;
+        }
+        if (!approveAmount || isNaN(approveAmount) || approveAmount <= 0) {
+          setStatus("❌ Enter a valid amount to approve");
+          return;
+        }
+
+        try {
+          await switchToMonadTestnet();
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          const tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, signer);
+
+          setStatus("⏳ Approving tokens...");
+          const amountWei = ethers.parseEther(approveAmount);
+          const tx = await tokenContract.approve(STAKING_CONTRACT_ADDRESS, amountWei);
+          await tx.wait();
+          setStatus("✅ Approval successful!");
+        } catch (err) {
+          console.error("Approval error:", err);
+          setStatus("❌ Approval failed: " + (err.reason || err.message));
+        }
+      };
+
+      const handleStake = async () => {
+        if (!wallet) {
+          setStatus("❌ Connect wallet first");
+          return;
+        }
+        if (!stakeAmount || isNaN(stakeAmount) || stakeAmount <= 0) {
+          setStatus("❌ Enter a valid amount to stake");
+          return;
+        }
+
+        try {
+          await switchToMonadTestnet();
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, signer);
+
+          setStatus("⏳ Staking tokens...");
+          const amountWei = ethers.parseEther(stakeAmount);
+          const tx = await stakingContract.stake(amountWei);
+          await tx.wait();
+
+          const lockupEndTime = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60;
+          localStorage.setItem(`lockup_${wallet}`, lockupEndTime.toString());
+          setLockupEnd(lockupEndTime);
+
+          await fetchBalances(wallet);
+          setStatus("✅ Staking successful!");
+        } catch (err) {
+          console.error("Staking error:", err);
+          setStatus("❌ Staking failed: " + (err.reason || err.message));
+        }
+      };
+
+      const handleUnstake = async () => {
+        if (!wallet) {
+          setStatus("❌ Connect wallet first");
+          return;
+        }
+        if (!unstakeAmount || isNaN(unstakeAmount) || unstakeAmount <= 0) {
+          setStatus("❌ Enter a valid amount to unstake");
+          return;
+        }
+        if (lockupEnd && Math.floor(Date.now() / 1000) < lockupEnd) {
+          setStatus("❌ Tokens are locked until the timer expires");
+          return;
+        }
+
+        try {
+          await switchToMonadTestnet();
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, signer);
+
+          setStatus("⏳ Unstaking tokens...");
+          const amountWei = ethers.parseEther(unstakeAmount);
+          const tx = await stakingContract.unstake(amountWei);
+          await tx.wait();
+
+          if (parseFloat(stakedBalance) - parseFloat(unstakeAmount) <= 0) {
+            localStorage.removeItem(`lockup_${wallet}`);
+            setLockupEnd(null);
+            setTimeLeft(null);
+          }
+
+          await fetchBalances(wallet);
+          setStatus("✅ Unstaking successful!");
+        } catch (err) {
+          console.error("Unstaking error:", err);
+          setStatus("❌ Unstaking failed: " + (err.reason || err.message));
+        }
+      };
+
+      return (
+        <div style={{
+          fontFamily: "monospace",
+          color: "#111",
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "15px",
+          height: "100%"
+        }}>
+          <h3 style={{ margin: "0", fontSize: "18px", color: "#222" }}>Stake Tokens</h3>
+          {wallet ? (
+            <>
+              <div style={{ background: "#f0f0f0", padding: "10px", borderRadius: "6px" }}>
+                <p style={{ margin: "5px 0", fontSize: "14px" }}>
+                  <strong>Wallet:</strong> {wallet.slice(0, 6)}...{wallet.slice(-4)}
+                </p>
+                <p style={{ margin: "5px 0", fontSize: "14px" }}>
+                  <strong>Token Balance:</strong> {parseFloat(balance).toFixed(2)} Tokens
+                </p>
+                <p style={{ margin: "5px 0", fontSize: "14px" }}>
+                  <strong>Staked Balance:</strong> {parseFloat(stakedBalance).toFixed(2)} Tokens
+                </p>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  <input
+                    type="number"
+                    value={approveAmount}
+                    onChange={(e) => setApproveAmount(e.target.value)}
+                    placeholder="Amount to approve"
+                    style={{
+                      padding: "8px",
+                      fontSize: "14px",
+                      border: "1px solid #888",
+                      borderRadius: "4px",
+                      background: "#f0f0f0",
+                      flex: "1"
+                    }}
+                  />
+                  <button onClick={handleApprove} style={{
+                    padding: "8px 16px",
+                    background: "#4f46e5",
+                    color: "white",
+                    fontWeight: "bold",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer"
+                  }}>
+                    Approve
+                  </button>
+                </div>
+
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  <input
+                    type="number"
+                    value={stakeAmount}
+                    onChange={(e) => setStakeAmount(e.target.value)}
+                    placeholder="Amount to stake"
+                    style={{
+                      padding: "8px",
+                      fontSize: "14px",
+                      border: "1px solid #888",
+                      borderRadius: "4px",
+                      background: "#f0f0f0",
+                      flex: "1"
+                    }}
+                  />
+                  <button onClick={handleStake} style={{
+                    padding: "8px 16px",
+                    background: "#4caf50",
+                    color: "white",
+                    fontWeight: "bold",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer"
+                  }}>
+                    Stake
+                  </button>
+                </div>
+
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  <input
+                    type="number"
+                    value={unstakeAmount}
+                    onChange={(e) => setUnstakeAmount(e.target.value)}
+                    placeholder="Amount to unstake"
+                    style={{
+                      padding: "8px",
+                      fontSize: "14px",
+                      border: "1px solid #888",
+                      borderRadius: "4px",
+                      background: "#f0f0f0",
+                      flex: "1"
+                    }}
+                  />
+                  <button onClick={handleUnstake} style={{
+                    padding: "8px 16px",
+                    background: timeLeft ? "#888" : "#e15a5a",
+                    color: "white",
+                    fontWeight: "bold",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: timeLeft ? "not-allowed" : "pointer"
+                  }} disabled={timeLeft}>
+                    Unstake
+                  </button>
+                </div>
+                {timeLeft && (
+                  <p style={{ margin: "5px 0", fontSize: "14px", color: "#e15a5a" }}>
+                    <strong>Locked Until:</strong> {timeLeft}
+                  </p>
+                )}
+              </div>
+
+              <p style={{ margin: "10px 0", fontSize: "14px", color: "#222" }}>{status}</p>
+            </>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+              <p style={{ fontSize: "14px", color: "#222" }}>
+                Please connect your wallet to stake tokens.
+              </p>
+              <button onClick={connectWallet} style={{
+                padding: "10px 20px",
                 background: "#4f46e5",
                 color: "white",
-                fontWeight: "bold",
                 border: "none",
                 borderRadius: "6px",
-                cursor: "pointer"
+                fontWeight: "bold",
+                cursor: "pointer",
+                boxShadow: "inset 0 0 5px rgba(0,0,0,0.2)"
               }}>
-                Approve
+                Connect Wallet
               </button>
             </div>
- 
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <input
-                type="number"
-                value={stakeAmount}
-                onChange={(e) => setStakeAmount(e.target.value)}
-                placeholder="Amount to stake"
-                style={{
-                  padding: "8px",
-                  fontSize: "14px",
-                  border: "1px solid #888",
-                  borderRadius: "4px",
-                  background: "#f0f0f0",
-                  flex: "1"
-                }}
-              />
-              <button onClick={handleStake} style={{
-                padding: "8px 16px",
-                background: "#4caf50",
-                color: "white",
-                fontWeight: "bold",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer"
-              }}>
-                Stake
-              </button>
-            </div>
- 
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <input
-                type="number"
-                value={unstakeAmount}
-                onChange={(e) => setUnstakeAmount(e.target.value)}
-                placeholder="Amount to unstake"
-                style={{
-                  padding: "8px",
-                  fontSize: "14px",
-                  border: "1px solid #888",
-                  borderRadius: "4px",
-                  background: "#f0f0f0",
-                  flex: "1"
-                }}
-              />
-              <button onClick={handleUnstake} style={{
-                padding: "8px 16px",
-                background: timeLeft ? "#888" : "#e15a5a",
-                color: "white",
-                fontWeight: "bold",
-                border: "none",
-                borderRadius: "6px",
-                cursor: timeLeft ? "not-allowed" : "pointer"
-              }} disabled={timeLeft}>
-                Unstake
-              </button>
-            </div>
-            {timeLeft && (
-              <p style={{ "5px 0", fontSize: "14px", color: "#e15a5a" }}>
-                <strong>Locked Until:</strong> {timeLeft}
-              </p>
-            )}
-          </div>
- 
-          <p style={{ "10px 0", fontSize: "14px", color: "#222" }}>{status}</p>
-        </>
-      ) : (
-        <p style={{ fontSize: "14px", color: "#222" }}>
-          Please connect your wallet to stake tokens.
-        </p>
-      )}
-    </div>
-  );
-};
+          )}
+        </div>
+      );
+    };
 
     const Desktop = () => {
       const [startOpen, setStartOpen] = useState(false);
       const [time, setTime] = useState(new Date());
       const [marketPrices, setMarketPrices] = useState({ btc: null, eth: null });
-const [showPartners, setShowPartners] = useState(true);
-const [openApps, setOpenApps] = useState([]);
-
+      const [showPartners, setShowPartners] = useState(true);
+      const [openApps, setOpenApps] = useState([]);
 
       useEffect(() => {
         const t = setInterval(() => setTime(new Date()), 1000);
         return () => clearInterval(t);
       }, []);
+
       useEffect(() => {
         fetchMarketData().then(setMarketPrices);
       }, []);
@@ -1870,13 +1881,10 @@ const [openApps, setOpenApps] = useState([]);
         setStartOpen(false);
       };
 
-
       const closeApp = (id) => setOpenApps(openApps.filter(i => i !== id));
 
       const renderContent = (app) => {
-
         if (app.id === "stake") return <StakeApp />;
-
         if (app.id === "faucet") return <FaucetApp />;
         if (app.id === "partners") return <PartnersWindow onClose={() => closeApp("partners")} />;
         if (app.id === "market") {
@@ -1927,7 +1935,6 @@ const [openApps, setOpenApps] = useState([]);
           );
         }
 
-
         if (app.id === "wallet") {
           return <WalletConnect />;
         }
@@ -1936,24 +1943,20 @@ const [openApps, setOpenApps] = useState([]);
           return <NFTBuilderApp />;
         }
 
-
-
         if (app.id === "pumpit") {
           return <PumpItGame />;
-        };
+        }
+
         if (app.id === "quest") {
           return <QuestApp />;
         }
 
-
         if (app.id === "honorary") {
           return <HonoraryGallery />;
-        };
+        }
+
         return <p>{app.name} is running...</p>;
       };
-
-
-
 
       return (
         <>
@@ -1979,8 +1982,7 @@ const [openApps, setOpenApps] = useState([]);
               );
             })}
           </div>
-{showPartners && <PartnersWindow onClose={() => setShowPartners(false)} />}
-
+          {showPartners && <PartnersWindow onClose={() => setShowPartners(false)} />}
           <div className="taskbar">
             <div className="taskbar-left">
               <button className="start-button" onClick={() => setStartOpen(!startOpen)}>
@@ -2011,19 +2013,17 @@ const [openApps, setOpenApps] = useState([]);
     };
 
     const App = () => {
-  const [screen, setScreen] = useState("text");
+      const [screen, setScreen] = useState("text");
 
-  if (screen === "text") return <LoadingText onDone={() => setScreen("boot")} />;
-  if (screen === "boot") return <BootScreen onFinish={() => setScreen("desktop")} />;
+      if (screen === "text") return <LoadingText onDone={() => setScreen("boot")} />;
+      if (screen === "boot") return <BootScreen onFinish={() => setScreen("desktop")} />;
 
-  return (
-    <>
-      <Desktop />
-
-    </>
-  );
-};
-
+      return (
+        <>
+          <Desktop />
+        </>
+      );
+    };
 
     const root = ReactDOM.createRoot(document.getElementById("root"));
     root.render(<App />);
