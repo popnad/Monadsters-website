@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Monadsters OS</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: monospace;
+      background: #000;
+      color: white;
+      overflow: hidden;
+    }
+
+    /* Initial text boot screen */
+    .loading-screen {
+      height: 100vh;
+      width: 100vw;
+      padding: 20px;
+      background: black;
+      white-space: pre-line;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    .boot-screen {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: black;
+    }
+
+    .market-entry {
+      background: #000;
+      border: 1px solid #888;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .market-entry img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+
+    .market-label {
+      display: flex;
+      align-items: center;
+    }
+
+    .market-price {
+      color: #00ff99;
+      font-weight: bold;
+    }
+
+
+    /* DogOS window */
+    .boot-box {
+      background: purple;
+      border: 4px solid #ccc;
+      padding: 40px;
+      text-align: center;
+      color: white;
+      width: 300px;
+      font-size: 14px;
+    }
+
+    .boot-box img {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: white;
+      margin: 15px 0;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #e15a5a;
+      transition: width 0.2s ease;
+    }
+
+    .desktop {
+      height: calc(100vh - 40px);
+      width: 100vw;
+      background: #181818 url("background.png") center/cover no-repeat;
+      display: grid;
+      grid-auto-flow: row;
+      grid-template-columns: repeat(3, auto);
+      /* max 3 ikon egy sorban */
+      gap: 10px;
+      padding: 20px;
+      justify-content: start;
+      align-content: start;
+      box-sizing: border-box;
+    }
+
+
+    .icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+
+
+
+    .icon img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+
+    }
+
+    .icon span {
+      margin: 10px;
+      font-size: 12px;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .window {
+      position: absolute;
+      min-width: 300px;
+      min-height: 200px;
+      width: 500px;
+      height: 400px;
+      background: #e0e0e0;
+      border: 2px solid #888;
+      box-shadow: 2px 2px 8px #0006;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      resize: both;
+      overflow: auto;
+    }
+
+    .window-header {
+      background: #c0c0c0;
+      padding: 8px;
+      cursor: move;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      border-bottom: 1px solid #999;
+    }
+
+    .window-content {
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 1.2vw;
+      /* Responsive font size */
+      color: black;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .window-content img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+   
+   
+.custom-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background-color: #444;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  background-image: linear-gradient(to right, #2196f3 var(--progress, 0%), #444 var(--progress, 0%));
+}
+
+/* Track - Safari & Chrome */
+.custom-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  background: transparent;
+  border-radius: 4px;
+}
+
+/* Thumb - Safari & Chrome */
+.custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #2196f3;
+  border: 2px solid white;
+  cursor: pointer;
+  margin-top: -3px; /* igazítás a sávhoz */
+}
+
+/* Track - Firefox */
+.custom-slider::-moz-range-track {
+  height: 8px;
+  background: transparent;
+  border-radius: 4px;
+}
+
+/* Thumb - Firefox */
+.custom-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #2196f3;
+  border: 2px solid white;
+  cursor: pointer;
+}
+
+
+    .market-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1vw;
+      border: 1px solid #888;
+      font-size: 1.1vw;
+      /* Responsive */
+      gap: 10px;
+    }
+
+    .market-entry img {
+      width: 2vw;
+      height: auto;
+    }
+
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 40px;
+      width: 100%;
+      background: #808080;
+      border-top: 2px solid #bdbdbdaa;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      font-family: monospace;
+    }
+
+    .taskbar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .taskbar-right {
+      font-size: 14px;
+      color: black;
+      background: #c0c0c0;
+      padding: 4px 8px;
+      border: 1px solid #888;
+      border-radius: 2px;
+      box-shadow: inset 0 1px #fff, inset 0 -1px #aaa;
+    }
+
+    .taskbar-button,
+    .start-button {
+      background: linear-gradient(to bottom, #e0e0e0, #b0b0b0);
+      border: 1px solid #888;
+      color: black;
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      border-radius: 3px;
+      box-shadow: inset 0 1px #fff, inset 0 -1px #aaa;
+      cursor: pointer;
+    }
+
+    .start-button img,
+    .taskbar-button img {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+
+    .start-menu {
+      position: absolute;
+      bottom: 40px;
+      left: 10px;
+      width: 180px;
+      background: #808080;
+      border: 2px solid #888;
+      box-shadow: 0 0 10px #0006;
+      border-radius: 4px;
+      z-index: 999;
+    }
+
+    .start-menu button {
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: none;
+      color: black;
+      text-align: left;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .start-menu button img {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+    }
+
+    .start-menu button:hover {
+      background-color: #dadada;
+    }
+
+    .particle {
+      position: absolute;
+      pointer-events: none;
+      animation: fall 1.5s linear forwards, spin 1.5s linear;
+      z-index: 1000;
+    }
+
+
+    @keyframes fall {
+      0% {
+        top: 0;
+        opacity: 1;
+      }
+
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    @keyframes spin-right {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+
+    @keyframes spin-left {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(-360deg);
+      }
+    }
+
+    .spin-right {
+      animation: fall 1.5s linear forwards, spin-right 1.5s linear;
+    }
+
+    .spin-left {
+      animation: fall 1.5s linear forwards, spin-left 1.5s linear;
+    }
+
+
+    .clicker-content {
+      height: 100%;
+      width: 100%;
+      background: radial-gradient(circle at center, #a855f7, #6b21a8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5vw;
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+
+    .clicker-content img {
+      width: 22%;
+      max-width: 160px;
+      min-width: 70px;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .clicker-content img:hover {
+      transform: scale(1.1);
+    }
+
+    .clicker-count {
+      font-size: 2vw;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .gallery-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .gallery-container input {
+      padding: 8px 10px;
+      font-size: 14px;
+      border: 1px solid #888;
+      border-radius: 4px;
+      background: #f0f0f0;
+      margin-bottom: 10px;
+      font-family: monospace;
+    }
+
+    .gallery-items {
+      flex: 1;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      padding-right: 6px;
+    }
+
+    .gallery-item {
+      background: #fff;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.03);
+    }
+
+    .gallery-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .gallery-item span {
+      font-size: 13px;
+      font-weight: bold;
+      color: #222;
+    }
+  </style>
+  <!-- Fejlécben a szükséges script-ek betöltése React és Web3 számára -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+
+  <!-- WalletConnect provider és Web3.js CDN-ekről -->
+  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.7.5/dist/web3.min.js"></script>
+</head>
+
+
+
+
+<body>
+  <div id="root"></div>
+  <div id="walletApp"></div>
+  <script type="text/babel">
+    function WalletConnect() {
+      const [address, setAddress] = React.useState(null);
+
+      React.useEffect(() => {
+        const saved = window.localStorage.getItem("walletAddress");
+        if (!address && saved) {
+          setAddress(saved);
+        }
+      }, [address]);
+
+      async function connectWallet() {
+        if (window.ethereum) {
+          try {
+            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            const walletAddress = accounts[0];
+            setAddress(walletAddress);
+            window.localStorage.setItem("walletAddress", walletAddress);
+          } catch (err) {
+            console.error("MetaMask connection error:", err);
+          }
+        } else {
+          try {
+            const wcProvider = new WalletConnectProvider.default({
+              infuraId: "asd"
+            });
+            await wcProvider.enable();
+            const web3 = new Web3(wcProvider);
+            const accounts = await web3.eth.getAccounts();
+            const walletAddress = accounts[0];
+            setAddress(walletAddress);
+            window.localStorage.setItem("walletAddress", walletAddress);
+          } catch (err) {
+            console.error("WalletConnect connection error:", err);
+          }
+        }
+      }
+
+      function disconnectWallet() {
+        setAddress(null);
+        window.localStorage.removeItem("walletAddress");
+      }
+
+      return (
+        <div style={{
+          fontFamily: "monospace",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px",
+          height: "100%",
+          gap: "20px",
+          background: "#f8f8f8",
+          borderRadius: "10px"
+        }}>
+          {address ? (
+            <>
+              <h3 style={{ color: "#111", margin: 0 }}>Connected Wallet:</h3>
+              <p style={{
+                fontSize: "14px",
+                background: "#eee",
+                padding: "10px",
+                borderRadius: "6px",
+                wordBreak: "break-all",
+                textAlign: "center",
+                color: "#333"
+              }}>{address}</p>
+              <button onClick={disconnectWallet} style={{
+                padding: "8px 16px",
+                background: "#e15a5a",
+                border: "none",
+                borderRadius: "6px",
+                color: "white",
+                fontWeight: "bold",
+                cursor: "pointer",
+                boxShadow: "inset 0 0 5px rgba(0,0,0,0.2)"
+              }}>Disconnect</button>
+            </>
+          ) : (
+            <button onClick={connectWallet} style={{
+              padding: "10px 20px",
+              background: "#4f46e5",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              boxShadow: "inset 0 0 5px rgba(0,0,0,0.2)"
+            }}>
+              Connect Wallet
+            </button>
+          )}
+        </div>
+      );
+    }
+
+
+    // A komponenst rendereljük az OS ablak div-jébe
+    const { useState, useEffect, useRef } = React;
+   
+   
+
+
+
+    const loadingLines = [
+      "Summoning Monadsters from the void...",
+      "Charging the portal... 87% stable",
+      "Feeding beasts... hope they’re not still hungry",
+      "Scanning for rogue entities in Monadspace",
+      "Injecting chaos serum into monster DNA...",
+      "Setting aggression levels... too high?",
+      "Breeding legendary mutations...",
+      "Taming wild Monadlings... or trying to",
+      "Powering up the monster containment field",
+      "Decoding ancient Monad runes...",
+      "Wrangling a three-headed beast... again",
+      "Monster sleep cycle: skipped",
+      "Downloading rage protocol...",
+      "Adjusting growl volume... it's loud",
+      "Polishing horns and sharpening claws",
+      "Synchronizing monster moods... good luck",
+      "Assembling the ultimate beast squad",
+      "Preparing snack stash for angry monsters",
+      "Recharging the mutation core...",
+      "Unleashing pixelated terror... hold on tight",
+      "Loading spooky vibes... almost too spooky",
+      "Finalizing monster hats... fashion is key",
+      "Decrypting beastly personalities",
+      "Verifying monster uniqueness... ",
+      "One monster glitched into reality... fixing it",
+      "Summoning glitch beast... please stand back",
+      "Monster battle cries calibrated",
+      "Portal sparks flying... almost ready",
+      "Mutant growl detected... sounds promising",
+      "All claws accounted for... barely",
+      "Running anti-cuteness protocol",
+      "Slime levels rising... it's happening!",
+      "Scanning for rare monstrosities...",
+      "One does not simply load Monadsters",
+      "Tactical snarl deployed",
+      "Hotdrop inbound... monsters ready to roll",
+      "Final boss is watching you load "
+    ];
+
+
+    const LoadingText = ({ onDone }) => {
+      const [lines, setLines] = useState([]);
+      const indexRef = useRef(0);
+
+      useEffect(() => {
+        const interval = setInterval(() => {
+          setLines(prev => [...prev, loadingLines[indexRef.current]]);
+          indexRef.current++;
+          if (indexRef.current >= loadingLines.length) {
+            clearInterval(interval);
+            setTimeout(onDone, 1000);
+          }
+        }, 150);
+        return () => clearInterval(interval);
+      }, []);
+
+      return <div className="loading-screen">{lines.join("\n")}</div>;
+    };
+
+    const BootScreen = ({ onFinish }) => {
+      const [progress, setProgress] = useState(0);
+      const [done, setDone] = useState(false);
+      const [countdown, setCountdown] = useState(5);
+      const countdownRef = useRef(null);
+
+      useEffect(() => {
+        const interval = setInterval(() => {
+          setProgress(p => {
+            if (p >= 100) {
+              clearInterval(interval);
+              setDone(true);
+              countdownRef.current = setInterval(() => {
+                setCountdown(c => {
+                  if (c <= 1) {
+                    clearInterval(countdownRef.current);
+                    onFinish();
+                  }
+                  return c - 1;
+                });
+              }, 1000);
+            }
+            return Math.min(p + 2, 100);
+          });
+        }, 100);
+
+        const handleKey = () => {
+          if (done) {
+            clearInterval(countdownRef.current);
+            onFinish();
+          }
+        };
+
+        window.addEventListener("keydown", handleKey);
+        return () => {
+          window.removeEventListener("keydown", handleKey);
+          clearInterval(countdownRef.current);
+        };
+      }, [done]);
+
+      return (
+        <div className="boot-screen">
+          <div className="boot-box">
+            <img src="MonadstersNFT.png" alt="boot" />
+            <h3>MonadstersOS V69.420</h3>
+            <div className="progress-bar">
+              <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
+            </div>
+            <p>
+              {done
+                ? `Press any key to continue... (${countdown})`
+                : "Initializing system components..."}
+            </p>
+          </div>
+        </div>
+      );
+    };
+    const PartnersWindow = ({ onClose }) => {
+  const images = ["thoon.png","thoon.png"];
+  const [current, setCurrent] = useState(0);
+  const [pos, setPos] = useState({ x: 900, y: 800 });
+  const dragging = useRef(false);
+  const offset = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const down = (e) => {
+    dragging.current = true;
+    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
+  };
+
+  const move = (e) => {
+    if (dragging.current) {
+      setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y });
+    }
+  };
+
+  const up = () => dragging.current = false;
+
+  useEffect(() => {
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+    return () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+    };
+  }, []);
+
+  return (
+    <div className="window" style={{
+      position: "absolute",
+      left: pos.x,
+      top: pos.y,
+      width: 320,
+      height: 140,
+      zIndex: 9999
+    }}>
+      <div className="window-header" onMouseDown={down}>
+        <span>Partners</span>
+        <button onClick={onClose}>✖</button>
+      </div>
+      <div style={{
+        flex: 1,
+        background: "black",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "8px"
+      }}>
+        <img src={`partners/${images[current]}`} alt="partner" style={{
+          maxWidth: "100%",
+          maxHeight: "100%"
+        }} />
+      </div>
+    </div>
+  );
+};
+
+    const fetchMarketData = async () => {
+      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd");
+      const data = await res.json();
+      return {
+        btc: data.bitcoin.usd,
+        eth: data.ethereum.usd
+      };
+    };
+
+    const apps = [
+      { id: "x", name: "X", icon: "x.png", url: "https://x.com/Monadsters" },
+      { id: "discord", name: "Discord", icon: "discord.png", url: "https://discord.gg/monadsters" },
+      { id: "monad", name: "Monad", icon: "monad.png", url: "https://testnet.monad.xyz/" },
+      { id: "market", name: "Market", icon: "market.png" },
+      { id: "faucet", name: "Faucet", icon: "faucet.png" },
+      { id: "stake", name: "Stake", icon: "stake.png" },
+      {
+        id: "magiceden",
+        name: "Magic Eden",
+        icon: "magiceden.png",
+        multiUrl: [
+          "https://magiceden.io/collections/monad-testnet/0x7ea266cf2db3422298e28b1c73ca19475b0ad345",
+          "https://magiceden.io/collections/monad-testnet/0x3d9a466589a3a57327294185b15789ddd22fe081"
+        ]
+      },
+      { id: "honorary", name: "Honorary", icon: "thropy.png" },
+      { id: "token", name: "Token", icon: "monadsters.png", url: "https://testnet.nad.fun/tokens/0x0137cF961eFb6CD90BeAD8B1BC7893f640A63aD8" },
+      { id: "builder", name: "NFT Builder", icon: "builder.png" },
+      { id: "pumpit", name: "Pump It", icon: "nft.png" },
+      { id: "wallet", name: "Wallet", icon: "wallet.png" },
+      { id: "quest", name: "Quest", icon: "quest.png" },
+     
+
+    ];
+
+
+    const DraggableWindow = ({ id, name, onClose, content, defaultSize }) => {
+  const [pos, setPos] = useState({ x: 100, y: 100 });
+  const [size, setSize] = useState(defaultSize || { width: 500, height: 400 }); // most már használja a defaultSize propot!
+  const dragging = useRef(false);
+  const offset = useRef({ x: 0, y: 0 });
+
+  const down = e => {
+    dragging.current = true;
+    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
+  };
+
+  const move = e => {
+    if (dragging.current) {
+      setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y });
+    }
+  };
+
+  const up = () => dragging.current = false;
+
+  useEffect(() => {
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+    return () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+    };
+  }, []);
+
+  return (
+    <div className="window" style={{ left: pos.x, top: pos.y, width: size.width, height: size.height }}>
+      <div className="window-header" onMouseDown={down}>
+        <span>{name}</span>
+        <button onClick={() => onClose(id)}>✖</button>
+      </div>
+      <div className="window-content">{content}</div>
+    </div>
+  );
+};
+
+    const HonoraryGallery = () => {
+      const [search, setSearch] = useState("");
+      const [modalImage, setModalImage] = useState(null);
+
+      // Fájlnév alapján képek betöltése a public/honorary mappából
+      const imageNames = [
+        "cryptunez.png",
+        "crexsol.png",
+        "keone.png"
+        // Ide jöhetnek még új fájlnevek
+      ];
+
+      const filtered = imageNames.filter((name) =>
+        name.toLowerCase().includes(search.toLowerCase())
+      );
+
+      return (
+        <div style={{ height: "100%", display: "flex", flexDirection: "column", padding: "10px" }}>
+          <input
+            type="text"
+            placeholder="Search by name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              padding: "10px",
+              fontSize: "14px",
+              marginBottom: "12px",
+              border: "1px solid #aaa",
+              borderRadius: "6px"
+            }}
+          />
+          <div style={{
+            flex: 1,
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+            gap: "16px",
+            overflowY: "auto",
+            paddingBottom: "12px"
+          }}>
+            {filtered.map((name, idx) => {
+              const label = name.replace(".png", "");
+              return (
+                <div key={idx} style={{
+                  background: "#fff",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  cursor: "pointer",
+                  maxHeight: "220px"
+                }}
+                  onClick={() => setModalImage(`honorary/${name}`)}
+                >
+                  <img
+                    src={`honorary/${name}`}
+                    alt={label}
+                    style={{
+                      width: "100%",
+                      maxHeight: "160px",
+                      objectFit: "cover",
+                      borderRadius: "6px",
+                      marginBottom: "8px"
+                    }}
+                  />
+                  <span style={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    color: "#111",
+                    textTransform: "capitalize"
+                  }}>{label}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Kattintható nagy kép megjelenítés modalban */}
+          {modalImage && (
+            <div onClick={() => setModalImage(null)} style={{
+              position: "fixed",
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: "rgba(0,0,0,0.7)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 9999,
+              cursor: "zoom-out"
+            }}>
+              <img
+                src={modalImage}
+                style={{
+                  maxWidth: "90%",
+                  maxHeight: "90%",
+                  borderRadius: "12px",
+                  boxShadow: "0 0 20px rgba(0,0,0,0.4)"
+                }}
+              />
+            </div>
+          )}
+        </div>
+      );
+    };
+
+
+    const NFTBuilderApp = () => {
+      const layers = [
+        "background",
+        "particlebg",
+        "wings",
+        "tail",
+        "body",
+        "headgear",
+        "eyes",
+        "mouth",
+        "clothing",
+        "necklace"
+      ];
+
+      const layerImageCounts = {
+        background: 50,
+        particlebg: 40,
+        wings: 35,
+        tail: 35,
+        body: 45,
+        headgear: 50,
+        eyes: 39,
+        mouth: 30,
+        clothing: 45,
+        necklace: 30
+      };
+
+      const [indexes, setIndexes] = useState({});
+      const canvasRef = useRef();
+
+      const getImagePath = (layer, index) =>
+        index !== null ? `assets/${layer}/${layer}${index + 1}.png` : null;
+
+      const drawToCanvas = async () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (const layer of layers) {
+          const index = indexes[layer];
+          if (index != null) {
+            const src = getImagePath(layer, index);
+            await new Promise(resolve => {
+              const img = new Image();
+              img.src = src;
+              img.onload = () => {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve();
+              };
+            });
+          }
+        }
+      };
+
+      useEffect(() => {
+        drawToCanvas();
+      }, [indexes]);
+
+      const handleChange = (layer, dir) => {
+        setIndexes(prev => {
+          const current = prev[layer] ?? -1;
+          const max = layerImageCounts[layer];
+          let next = current + dir;
+          if (next >= max) next = 0;
+          if (next < 0) next = max - 1;
+          return { ...prev, [layer]: next };
+        });
+      };
+
+      const downloadImage = () => {
+        const canvas = canvasRef.current;
+        const link = document.createElement("a");
+        link.download = "monadster.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+        // Quest aktiválás
+        const wallet = localStorage.getItem("walletAddress");
+        if (wallet) {
+          const data = JSON.parse(localStorage.getItem(`quests_${wallet}`)) || {};
+          data.nftBuilt = true;
+          localStorage.setItem(`quests_${wallet}`, JSON.stringify(data));
+        }
+      };
+
+
+
+      return (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+          <h3>Build Your Monadster</h3>
+          <canvas
+            ref={canvasRef}
+            width={280}
+            height={280}
+            style={{ background: "#111", border: "2px solid #666", borderRadius: "8px" }}
+          />
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "10px",
+            width: "100%",
+            maxWidth: "600px"
+          }}>
+            {layers.map(layer => (
+              <div key={layer} style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                background: "#f4f4f4",
+                padding: "8px",
+                borderRadius: "6px"
+              }}>
+                <strong style={{ marginBottom: "4px" }}>{layer}</strong>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <img src="leftarrow.png" onClick={() => handleChange(layer, -1)} style={{ cursor: "pointer", width: "20px" }} />
+                  <span style={{ fontSize: "14px" }}>
+                    {indexes[layer] != null ? `#${indexes[layer] + 1}` : "None"}
+                  </span>
+                  <img src="rightarrow.png" onClick={() => handleChange(layer, 1)} style={{ cursor: "pointer", width: "20px" }} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <button onClick={downloadImage} style={{
+            marginTop: "12px",
+            padding: "8px 16px",
+            fontWeight: "bold",
+            background: "#4f46e5",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer"
+          }}>
+            Download NFT
+          </button>
+        </div>
+      );
+    };
+
+
+
+
+    // Add this new component above the Desktop component in the script
+    const PumpItGame = () => {
+      const [clicks, setClicks] = useState(0);
+      const containerRef = useRef();
+
+      const wallet = localStorage.getItem("walletAddress");
+
+      useEffect(() => {
+        if (wallet) {
+          const saved = localStorage.getItem(`clicks_${wallet}`);
+          if (saved) setClicks(parseInt(saved));
+        }
+      }, [wallet]);
+
+      const handleClick = () => {
+        setClicks((prev) => {
+          const updated = prev + 1;
+
+          // Quest és Clicks mentés
+          if (wallet) {
+            const data = JSON.parse(localStorage.getItem(`quests_${wallet}`)) || {};
+            data.clicks = updated;
+            localStorage.setItem(`quests_${wallet}`, JSON.stringify(data));
+            localStorage.setItem(`clicks_${wallet}`, updated.toString());
+          }
+
+          return updated;
+        });
+
+        // Particle animáció
+        const img = document.createElement("img");
+        img.src = "nftparticle.png";
+        const spinClass = Math.random() > 0.5 ? "spin-right" : "spin-left";
+        img.className = `particle ${spinClass}`;
+        const rect = containerRef.current.getBoundingClientRect();
+        img.style.left = `${Math.random() * (rect.width - 32)}px`;
+        containerRef.current.appendChild(img);
+
+        setTimeout(() => {
+          img.remove();
+        }, 2000);
+      };
+
+      return (
+        <div className="clicker-content" ref={containerRef}>
+          <img src="nft.png" onClick={handleClick} alt="NFT" />
+          <div className="clicker-count">Clicks: {clicks}</div>
+        </div>
+      );
+    };
+
+    const QuestApp = () => {
+      const [wallet, setWallet] = React.useState(null);
+      const [clicks, setClicks] = React.useState(0);
+      const [marketOpened, setMarketOpened] = React.useState(false);
+      const [xp, setXp] = React.useState(0);
+      const [completed, setCompleted] = React.useState([]);
+      const checkQuest = () => {
+        if (!completed.includes("buildNFT") && localStorage.getItem(`quests_${wallet}`)) {
+          const data = JSON.parse(localStorage.getItem(`quests_${wallet}`));
+          if (data.nftBuilt === true) {
+            saveProgress({
+              xp: xp + 40,
+              completed: [...completed, "buildNFT"]
+            });
+          }
+        }
+
+        if (!completed.includes("buildNFT")) {
+          const downloaded = localStorage.getItem("downloadedNFT");
+          if (downloaded === "true") {
+            saveProgress({
+              xp: xp + 30,
+              completed: [...completed, "buildNFT"]
+            });
+          }
+        }
+
+        if (!completed.includes("100clicks") && clicks >= 100) {
+          saveProgress({
+            xp: xp + 50,
+            completed: [...completed, "100clicks"]
+          });
+        }
+        if (!completed.includes("openMarket") && marketOpened) {
+          saveProgress({
+            xp: xp + 25,
+            completed: [...completed, "openMarket"]
+          });
+        }
+      };
+
+      const saveProgress = (updates) => {
+        const newData = {
+          clicks,
+          marketOpened,
+          xp,
+          completed,
+          ...updates
+        };
+
+
+        if (wallet) {
+          localStorage.setItem(`quests_${wallet}`, JSON.stringify(newData));
+        }
+        if (updates.clicks !== undefined) setClicks(updates.clicks);
+        if (updates.marketOpened !== undefined) setMarketOpened(updates.marketOpened);
+        if (updates.xp !== undefined) setXp(updates.xp);
+        if (updates.completed !== undefined) setCompleted(updates.completed);
+      };
+
+      React.useEffect(() => {
+        const storedWallet = localStorage.getItem("walletAddress");
+        if (storedWallet) {
+          setWallet(storedWallet);
+
+          const savedData = JSON.parse(localStorage.getItem(`quests_${storedWallet}`)) || {};
+          setClicks(savedData.clicks || 0);
+          setMarketOpened(savedData.marketOpened || false);
+          setXp(savedData.xp || 0);
+          setCompleted(savedData.completed || []);
+        }
+      }, []);
+
+      // figyeli a változást, hogy bármikor új quest teljesüljön
+      React.useEffect(() => {
+        checkQuest();
+      }, [clicks, marketOpened]);
+
+
+      const getQuestStatus = (id) => completed.includes(id) ? "✅" : "❌";
+
+      return (
+        <div style={{ fontFamily: "monospace", color: "#111" }}>
+          <h3>Quest Progress</h3>
+          {wallet ? (
+            <>
+              <p><strong>Wallet:</strong> {wallet.slice(0, 6)}...{wallet.slice(-4)}</p>
+              <p><strong>XP:</strong> {xp}</p>
+              <ul>
+                <li>{getQuestStatus("100clicks")} Reach 100 Clicks in Pump It ({clicks}/100)</li>
+                <li>{getQuestStatus("openMarket")} Open the Market App</li>
+                <li>{getQuestStatus("buildNFT")} Build and Download an NFT</li>
+
+              </ul>
+            </>
+          ) : (
+            <p>Please connect wallet to track progress.</p>
+          )}
+        </div>
+      );
+    };
+
+
+    const FaucetApp = () => {
+      const [wallet, setWallet] = React.useState(null);
+      const [lastClaim, setLastClaim] = React.useState(null);
+      const [status, setStatus] = React.useState("");
+
+      React.useEffect(() => {
+        const saved = localStorage.getItem("walletAddress");
+        if (saved) {
+          setWallet(saved);
+          const last = localStorage.getItem(`faucet_claim_${saved}`);
+          if (last) setLastClaim(parseInt(last));
+        }
+      }, []);
+
+      const canClaim = () => {
+        if (!lastClaim) return true;
+        const now = Date.now();
+        return now - lastClaim > 6 * 60 * 60 * 1000;
+      };
+
+      const claim = async () => {
+        if (!wallet) return setStatus("❌ Connect wallet first");
+        if (!canClaim()) return setStatus("⏳ You must wait 6 hours between claims");
+
+        const provider = new ethers.JsonRpcProvider("https://testnet-rpc.monad.xyz/");
+        const privateKey = "asd";
+        const sender = new ethers.Wallet(privateKey, provider);
+
+        try {
+          setStatus("🚀 Sending 0.1 MON...");
+          const tx = await sender.sendTransaction({
+            to: wallet,
+            value: ethers.parseEther("0.1")
+          });
+          localStorage.setItem(`faucet_claim_${wallet}`, Date.now().toString());
+          setLastClaim(Date.now());
+          setStatus(`✅ Success! TX: ${tx.hash}`);
+        } catch (err) {
+          console.error("Faucet error:", err);
+          setStatus("❌ " + err.message);
+        }
+      };
+
+      const nextClaim = () => {
+        if (!lastClaim) return "Now";
+        const ms = lastClaim + 6 * 60 * 60 * 1000 - Date.now();
+        if (ms <= 0) return "Now";
+        const minutes = Math.floor(ms / 60000);
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours}h ${mins}m`;
+      };
+
+      return (
+        <div style={{ padding: "20px", fontFamily: "monospace", color: "#111" }}>
+          <h3>Monad Faucet</h3>
+          {wallet ? (
+            <>
+              <p><strong>Wallet:</strong> {wallet.slice(0, 6)}...{wallet.slice(-4)}</p>
+              <p><strong>Next claim:</strong> {nextClaim()}</p>
+              <button onClick={claim} style={{
+                padding: "10px 20px",
+                background: "#4caf50",
+                color: "white",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                marginTop: "10px"
+              }}>
+                Claim 0.1 MON
+              </button>
+              <p style={{ marginTop: "10px", color: "#222" }}>{status}</p>
+            </>
+          ) : (
+            <p>Please connect your wallet to claim</p>
+          )}
+        </div>
+      );
+    };
+
+
+const StakeApp = () => {
+  const [wallet, setWallet] = React.useState(null);
+  const [balance, setBalance] = React.useState("0");
+  const [stakedBalance, setStakedBalance] = React.useState("0");
+  const [approveAmount, setApproveAmount] = React.useState("");
+  const [stakeAmount, setStakeAmount] = React.useState("");
+  const [unstakeAmount, setUnstakeAmount] = React.useState("");
+  const [status, setStatus] = React.useState("");
+  const [lockupEnd, setLockupEnd] = React.useState(null);
+  const [timeLeft, setTimeLeft] = React.useState(null);
+ 
+  const STAKING_CONTRACT_ADDRESS = "0x5dbfc4D0B75570aA610D7F0E913f37d62b81d9c3";
+  const TOKEN_ADDRESS = "0x0137cF961eFb6CD90BeAD8B1BC7893f640A63aD8";
+  const STAKING_ABI = [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Staked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Unstaked",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "getStakedBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "stake",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "stakes",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "stakingToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalStaked",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "unstake",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ];
+  const TOKEN_ABI = [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ];
+ 
+  React.useEffect(() => {
+    const savedWallet = localStorage.getItem("walletAddress");
+    if (savedWallet) {
+      setWallet(savedWallet);
+      fetchBalances(savedWallet);
+      const lockupData = localStorage.getItem(`lockup_${savedWallet}`);
+      if (lockupData) {
+        setLockupEnd(parseInt(lockupData));
+      }
+    }
+  }, []);
+ 
+  React.useEffect(() => {
+    if (lockupEnd) {
+      const timer = setInterval(() => {
+        const now = Math.floor(Date.now() / 1000);
+        const timeRemaining = lockupEnd - now;
+        if (timeRemaining <= 0) {
+          setTimeLeft(null);
+          clearInterval(timer);
+        } else {
+          const days = Math.floor(timeRemaining / (24 * 60 * 60));
+          const hours = Math.floor((timeRemaining % (24 * 60 * 60)) / (60 * 60));
+          const minutes = Math.floor((timeRemaining % (60 * 60)) / 60);
+          const seconds = timeRemaining % 60;
+          setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+        }
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [lockupEnd]);
+ 
+  const switchToMonadTestnet = async () => {
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: "0x101bf" }], // 41455 in hex
+      });
+    } catch (switchError) {
+      if (switchError.code === 4902) {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "10143",
+              chainName: "Monad Testnet",
+              rpcUrls: ["https://testnet-rpc.monad.xyz"],
+              nativeCurrency: {
+                name: "MON",
+                symbol: "MON",
+                decimals: 18,
+              },
+              blockExplorerUrls: ["https://explorer.testnet.monad.xyz"],
+            },
+          ],
+        });
+      } else {
+        throw switchError;
+      }
+    }
+  };
+ 
+  const fetchBalances = async (userAddress) => {
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, provider);
+      const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, provider);
+ 
+      const tokenBalance = await tokenContract.balanceOf(userAddress);
+      const staked = await stakingContract.getStakedBalance(userAddress);
+ 
+      setBalance(ethers.formatEther(tokenBalance));
+      setStakedBalance(ethers.formatEther(staked));
+    } catch (err) {
+      console.error("Error fetching balances:", err);
+      setStatus("❌ Error fetching balances");
+    }
+  };
+ 
+  const handleApprove = async () => {
+    if (!wallet) {
+      setStatus("❌ Connect wallet first");
+      return;
+    }
+    if (!approveAmount || isNaN(approveAmount) || approveAmount <= 0) {
+      setStatus("❌ Enter a valid amount");
+      return;
+    }
+ 
+    try {
+      await switchToMonadTestnet();
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, signer);
+ 
+      setStatus("⏳ Approving tokens...");
+      const amountWei = ethers.parseEther(approveAmount);
+      const tx = await tokenContract.approve(STAKING_CONTRACT_ADDRESS, amountWei);
+      await tx.wait();
+      setStatus("✅ Approval successful!");
+    } catch (err) {
+      console.error("Approval error:", err);
+      setStatus("❌ Approval failed: " + err.message);
+    }
+  };
+ 
+  const handleStake = async () => {
+    if (!wallet) {
+      setStatus("❌ Connect wallet first");
+      return;
+    }
+    if (!stakeAmount || isNaN(stakeAmount) || stakeAmount <= 0) {
+      setStatus("❌ Enter a valid amount");
+      return;
+    }
+ 
+    try {
+      await switchToMonadTestnet();
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, signer);
+ 
+      setStatus("⏳ Staking tokens...");
+      const amountWei = ethers.parseEther(stakeAmount);
+      const tx = await stakingContract.stake(amountWei);
+      await tx.wait();
+ 
+      // Set 7-day lockup
+      const lockupEndTime = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60; // 7 days in seconds
+      localStorage.setItem(`lockup_${wallet}`, lockupEndTime.toString());
+      setLockupEnd(lockupEndTime);
+ 
+      await fetchBalances(wallet);
+      setStatus("✅ Staking successful!");
+    } catch (err) {
+      console.error("Staking error:", err);
+      setStatus("❌ Staking failed: " + err.message);
+    }
+  };
+ 
+  const handleUnstake = async () => {
+    if (!wallet) {
+      setStatus("❌ Connect wallet first");
+      return;
+    }
+    if (!unstakeAmount || isNaN(unstakeAmount) || unstakeAmount <= 0) {
+      setStatus("❌ Enter a valid amount");
+      return;
+    }
+    if (lockupEnd && Math.floor(Date.now() / 1000) < lockupEnd) {
+      setStatus("❌ Tokens are locked until the timer expires");
+      return;
+    }
+ 
+    try {
+      await switchToMonadTestnet();
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, signer);
+ 
+      setStatus("⏳ Unstaking tokens...");
+      const amountWei = ethers.parseEther(unstakeAmount);
+      const tx = await stakingContract.unstake(amountWei);
+      await tx.wait();
+ 
+      // Reset lockup if all tokens are unstaked
+      if (parseFloat(stakedBalance) - parseFloat(unstakeAmount) <= 0) {
+        localStorage.removeItem(`lockup_${wallet}`);
+        setLockupEnd(null);
+        setTimeLeft(null);
+      }
+ 
+      await fetchBalances(wallet);
+      setStatus("✅ Unstaking successful!");
+    } catch (err) {
+      console.error("Unstaking error:", err);
+      setStatus("❌ Unstaking failed: " + err.message);
+    }
+  };
+ 
+  return (
+    <div style={{
+      fontFamily: "monospace",
+      color: "#111",
+      padding: "20px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "15px",
+      height: "100%"
+    }}>
+      <h3 style={{ "0", fontSize: "18px", color: "#222" }}>Stake Tokens</h3>
+      {wallet ? (
+        <>
+          <div style={{ background: "#f0f0f0", padding: "10px", borderRadius: "6px" }}>
+            <p style={{ "5px 0", fontSize: "14px" }}>
+              <strong>Wallet:</strong> {wallet.slice(0, 6)}...{wallet.slice(-4)}
+            </p>
+            <p style={{ "5px 0", fontSize: "14px" }}>
+              <strong>Token Balance:</strong> {parseFloat(balance).toFixed(2)} Tokens
+            </p>
+            <p style={{ "5px 0", fontSize: "14px" }}>
+              <strong>Staked Balance:</strong> {parseFloat(stakedBalance).toFixed(2)} Tokens
+            </p>
+          </div>
+ 
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <input
+                type="number"
+                value={approveAmount}
+                onChange={(e) => setApproveAmount(e.target.value)}
+                placeholder="Amount to approve"
+                style={{
+                  padding: "8px",
+                  fontSize: "14px",
+                  border: "1px solid #888",
+                  borderRadius: "4px",
+                  background: "#f0f0f0",
+                  flex: "1"
+                }}
+              />
+              <button onClick={handleApprove} style={{
+                padding: "8px 16px",
+                background: "#4f46e5",
+                color: "white",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer"
+              }}>
+                Approve
+              </button>
+            </div>
+ 
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <input
+                type="number"
+                value={stakeAmount}
+                onChange={(e) => setStakeAmount(e.target.value)}
+                placeholder="Amount to stake"
+                style={{
+                  padding: "8px",
+                  fontSize: "14px",
+                  border: "1px solid #888",
+                  borderRadius: "4px",
+                  background: "#f0f0f0",
+                  flex: "1"
+                }}
+              />
+              <button onClick={handleStake} style={{
+                padding: "8px 16px",
+                background: "#4caf50",
+                color: "white",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer"
+              }}>
+                Stake
+              </button>
+            </div>
+ 
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <input
+                type="number"
+                value={unstakeAmount}
+                onChange={(e) => setUnstakeAmount(e.target.value)}
+                placeholder="Amount to unstake"
+                style={{
+                  padding: "8px",
+                  fontSize: "14px",
+                  border: "1px solid #888",
+                  borderRadius: "4px",
+                  background: "#f0f0f0",
+                  flex: "1"
+                }}
+              />
+              <button onClick={handleUnstake} style={{
+                padding: "8px 16px",
+                background: timeLeft ? "#888" : "#e15a5a",
+                color: "white",
+                fontWeight: "bold",
+                border: "none",
+                borderRadius: "6px",
+                cursor: timeLeft ? "not-allowed" : "pointer"
+              }} disabled={timeLeft}>
+                Unstake
+              </button>
+            </div>
+            {timeLeft && (
+              <p style={{ "5px 0", fontSize: "14px", color: "#e15a5a" }}>
+                <strong>Locked Until:</strong> {timeLeft}
+              </p>
+            )}
+          </div>
+ 
+          <p style={{ "10px 0", fontSize: "14px", color: "#222" }}>{status}</p>
+        </>
+      ) : (
+        <p style={{ fontSize: "14px", color: "#222" }}>
+          Please connect your wallet to stake tokens.
+        </p>
+      )}
+    </div>
+  );
+};
+
+    const Desktop = () => {
+      const [startOpen, setStartOpen] = useState(false);
+      const [time, setTime] = useState(new Date());
+      const [marketPrices, setMarketPrices] = useState({ btc: null, eth: null });
+const [showPartners, setShowPartners] = useState(true);
+const [openApps, setOpenApps] = useState([]);
+
+
+      useEffect(() => {
+        const t = setInterval(() => setTime(new Date()), 1000);
+        return () => clearInterval(t);
+      }, []);
+      useEffect(() => {
+        fetchMarketData().then(setMarketPrices);
+      }, []);
+
+      const toggleApp = (id) => {
+        const app = apps.find(a => a.id === id);
+        if (app.multiUrl) {
+          app.multiUrl.forEach(url => window.open(url, "_blank"));
+        } else if (app.url) {
+          window.open(app.url, "_blank");
+        } else if (!openApps.includes(id)) {
+          setOpenApps([...openApps, id]);
+        }
+        setStartOpen(false);
+      };
+
+
+      const closeApp = (id) => setOpenApps(openApps.filter(i => i !== id));
+
+      const renderContent = (app) => {
+
+        if (app.id === "stake") return <StakeApp />;
+
+        if (app.id === "faucet") return <FaucetApp />;
+        if (app.id === "partners") return <PartnersWindow onClose={() => closeApp("partners")} />;
+        if (app.id === "market") {
+          const wallet = localStorage.getItem("walletAddress");
+          if (wallet) {
+            const saved = JSON.parse(localStorage.getItem(`quests_${wallet}`)) || {};
+            if (!saved.marketOpened) {
+              saved.marketOpened = true;
+              localStorage.setItem(`quests_${wallet}`, JSON.stringify(saved));
+            }
+          }
+
+          return (
+            <div>
+              <div className="market-entry">
+                <div className="market-label">
+                  <img src="btc.png" alt="BTC" />
+                  Bitcoin (BTC):
+                </div>
+                <div className="market-price">
+                  {marketPrices.btc !== null ? `${marketPrices.btc} USD` : "..."}
+                </div>
+              </div>
+              <div className="market-entry">
+                <div className="market-label">
+                  <img src="eth.png" alt="ETH" />
+                  Ethereum (ETH):
+                </div>
+                <div className="market-price">
+                  {marketPrices.eth !== null ? `${marketPrices.eth} USD` : "..."}
+                </div>
+              </div>
+              <div className="market-entry">
+                <div className="market-label">
+                  <img src="monad.png" alt="Monad" />
+                  Monad:
+                </div>
+                <div className="market-price">SOON...</div>
+              </div>
+              <div className="market-entry">
+                <div className="market-label">
+                  <img src="monadsters.png" alt="Monadsters" />
+                  Monadsters:
+                </div>
+                <div className="market-price">SOON...</div>
+              </div>
+            </div>
+          );
+        }
+
+
+        if (app.id === "wallet") {
+          return <WalletConnect />;
+        }
+
+        if (app.id === "builder") {
+          return <NFTBuilderApp />;
+        }
+
+
+
+        if (app.id === "pumpit") {
+          return <PumpItGame />;
+        };
+        if (app.id === "quest") {
+          return <QuestApp />;
+        }
+
+
+        if (app.id === "honorary") {
+          return <HonoraryGallery />;
+        };
+        return <p>{app.name} is running...</p>;
+      };
+
+
+
+
+      return (
+        <>
+          <div className="desktop">
+            {apps.map(app => (
+              <div key={app.id} className="icon" onClick={() => toggleApp(app.id)}>
+                <img src={app.icon} alt={app.name} />
+                <span>{app.name}</span>
+              </div>
+            ))}
+            {openApps.map(id => {
+              const app = apps.find(a => a.id === id);
+              const defaultSize = id === "builder" ? { width: 760, height: 880 } : undefined;
+              return (
+                <DraggableWindow
+                  key={id}
+                  id={id}
+                  name={app.name}
+                  onClose={closeApp}
+                  content={renderContent(app)}
+                  defaultSize={defaultSize}
+                />
+              );
+            })}
+          </div>
+{showPartners && <PartnersWindow onClose={() => setShowPartners(false)} />}
+
+          <div className="taskbar">
+            <div className="taskbar-left">
+              <button className="start-button" onClick={() => setStartOpen(!startOpen)}>
+                <img src="background.png" /> Start
+              </button>
+              {openApps.map(id => {
+                const app = apps.find(a => a.id === id);
+                return (
+                  <button className="taskbar-button" key={id}>
+                    <img src={app.icon} /> {app.name}
+                  </button>
+                );
+              })}
+              {startOpen && (
+                <div className="start-menu">
+                  {apps.map(app => (
+                    <button key={app.id} onClick={() => toggleApp(app.id)}>
+                      <img src={app.icon} /> {app.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="taskbar-right">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+        </>
+      );
+    };
+
+    const App = () => {
+  const [screen, setScreen] = useState("text");
+
+  if (screen === "text") return <LoadingText onDone={() => setScreen("boot")} />;
+  if (screen === "boot") return <BootScreen onFinish={() => setScreen("desktop")} />;
+
+  return (
+    <>
+      <Desktop />
+
+    </>
+  );
+};
+
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>
