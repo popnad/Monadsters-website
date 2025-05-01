@@ -1210,7 +1210,7 @@
               <ul>
                 <li>{getQuestStatus("100clicks")} Reach 100 Clicks in Pump It ({clicks}/100)</li>
                 <li>{getQuestStatus("openMarket")} Open the Market App</li>
- захист                <li>{getQuestStatus("buildNFT")} Build and Download an NFT</li>
+                <li>{getQuestStatus("buildNFT")} Build and Download an NFT</li>
               </ul>
             </>
           ) : (
@@ -1314,6 +1314,8 @@
 
       const STAKING_CONTRACT_ADDRESS = "0x5dbfc4D0B75570aA610D7F0E913f37d62b81d9c3";
       const TOKEN_ADDRESS = "0x0137cF961eFb6CD90BeAD8B1BC7893f640A63aD8";
+      const MONAD_TESTNET_CHAIN_ID = "0x27CF"; // 10143 in hex
+
       const STAKING_ABI = [
         {
           "inputs": [],
@@ -1527,7 +1529,7 @@
       React.useEffect(() => {
         if (window.ethereum) {
           const handleChainChanged = (chainId) => {
-            if (chainId !== "0x27CF") {
+            if (chainId !== MONAD_TESTNET_CHAIN_ID) {
               setStatus("⚠️ Please switch to Monad Testnet");
               setWallet(null);
               localStorage.removeItem("walletAddress");
@@ -1541,7 +1543,6 @@
           };
 
           window.ethereum.on("chainChanged", handleChainChanged);
-
           return () => {
             window.ethereum.removeListener("chainChanged", handleChainChanged);
           };
@@ -1552,6 +1553,7 @@
         if (window.ethereum) {
           try {
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            await switchToMonadTestnet();
             const walletAddress = accounts[0];
             setWallet(walletAddress);
             localStorage.setItem("walletAddress", walletAddress);
@@ -1567,31 +1569,39 @@
 
       const switchToMonadTestnet = async () => {
         try {
-          await window.ethereum.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: "0x27CF" }], // 10143 in hex
-          });
-        } catch (switchError) {
-          if (switchError.code === 4902) {
-            await window.ethereum.request({
-              method: "wallet_addEthereumChain",
-              params: [
-                {
-                  chainId: "0x27CF", // 10143 in hex
-                  chainName: "Monad Testnet",
-                  rpcUrls: ["https://testnet-rpc.monad.xyz"],
-                  nativeCurrency: {
-                    name: "MON",
-                    symbol: "MON",
-                    decimals: 18,
-                  },
-                  blockExplorerUrls: ["https://explorer.testnet.monad.xyz"],
-                },
-              ],
-            });
-          } else {
-            throw switchError;
+          const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+          if (currentChainId !== MONAD_TESTNET_CHAIN_ID) {
+            try {
+              await window.ethereum.request({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId: MONAD_TESTNET_CHAIN_ID }],
+              });
+            } catch (switchError) {
+              if (switchError.code === 4902) {
+                await window.ethereum.request({
+                  method: "wallet_addEthereumChain",
+                  params: [
+                    {
+                      chainId: MONAD_TESTNET_CHAIN_ID,
+                      chainName: "Monad Testnet",
+                      rpcUrls: ["https://testnet-rpc.monad.xyz"],
+                      nativeCurrency: {
+                        name: "MON",
+                        symbol: "MON",
+                        decimals: 18,
+                      },
+                      blockExplorerUrls: ["https://explorer.testnet.monad.xyz"],
+                    },
+                  ],
+                });
+              } else {
+                throw switchError;
+              }
+            }
           }
+        } catch (err) {
+          console.error("Network switch error:", err);
+          throw new Error("Failed to switch to Monad Testnet: " + err.message);
         }
       };
 
@@ -1629,11 +1639,19 @@
           const signer = await provider.getSigner();
           const tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, signer);
 
+          // Verify chain ID before sending transaction
+          const chainId = await window.ethereum.request({ method: "eth_chainId" });
+          if (chainId !== MONAD_TESTNET_CHAIN_ID) {
+            setStatus("❌ Incorrect network. Please switch to Monad Testnet.");
+            return;
+          }
+
           setStatus("⏳ Approving tokens...");
           const amountWei = ethers.parseEther(approveAmount);
           const tx = await tokenContract.approve(STAKING_CONTRACT_ADDRESS, amountWei);
           await tx.wait();
           setStatus("✅ Approval successful!");
+          setApproveAmount(""); // Clear input after success
         } catch (err) {
           console.error("Approval error:", err);
           setStatus("❌ Approval failed: " + (err.reason || err.message));
@@ -1656,6 +1674,13 @@
           const signer = await provider.getSigner();
           const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, signer);
 
+          // Verify chain ID
+          const chainId = await window.ethereum.request({ method: "eth_chainId" });
+          if (chainId !== MONAD_TESTNET_CHAIN_ID) {
+            setStatus("❌ Incorrect network. Please switch to Monad Testnet.");
+            return;
+          }
+
           setStatus("⏳ Staking tokens...");
           const amountWei = ethers.parseEther(stakeAmount);
           const tx = await stakingContract.stake(amountWei);
@@ -1667,6 +1692,7 @@
 
           await fetchBalances(wallet);
           setStatus("✅ Staking successful!");
+          setStakeAmount(""); // Clear input after success
         } catch (err) {
           console.error("Staking error:", err);
           setStatus("❌ Staking failed: " + (err.reason || err.message));
@@ -1693,6 +1719,13 @@
           const signer = await provider.getSigner();
           const stakingContract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, STAKING_ABI, signer);
 
+          // Verify chain ID
+          const chainId = await window.ethereum.request({ method: "eth_chainId" });
+          if (chainId !== MONAD_TESTNET_CHAIN_ID) {
+            setStatus("❌ Incorrect network. Please switch to Monad Testnet.");
+            return;
+          }
+
           setStatus("⏳ Unstaking tokens...");
           const amountWei = ethers.parseEther(unstakeAmount);
           const tx = await stakingContract.unstake(amountWei);
@@ -1706,10 +1739,17 @@
 
           await fetchBalances(wallet);
           setStatus("✅ Unstaking successful!");
+          setUnstakeAmount(""); // Clear input after success
         } catch (err) {
           console.error("Unstaking error:", err);
           setStatus("❌ Unstaking failed: " + (err.reason || err.message));
         }
+      };
+
+      // Function to set stake amount based on percentage of balance
+      const setStakePercentage = (percentage) => {
+        const amount = (parseFloat(balance) * (percentage / 100)).toFixed(2);
+        setStakeAmount(amount);
       };
 
       return (
@@ -1766,32 +1806,54 @@
                   </button>
                 </div>
 
-                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                  <input
-                    type="number"
-                    value={stakeAmount}
-                    onChange={(e) => setStakeAmount(e.target.value)}
-                    placeholder="Amount to stake"
-                    style={{
-                      padding: "8px",
-                      fontSize: "14px",
-                      border: "1px solid #888",
-                      borderRadius: "4px",
-                      background: "#f0f0f0",
-                      flex: "1"
-                    }}
-                  />
-                  <button onClick={handleStake} style={{
-                    padding: "8px 16px",
-                    background: "#4caf50",
-                    color: "white",
-                    fontWeight: "bold",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer"
-                  }}>
-                    Stake
-                  </button>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <input
+                      type="number"
+                      value={stakeAmount}
+                      onChange={(e) => setStakeAmount(e.target.value)}
+                      placeholder="Amount to stake"
+                      style={{
+                        padding: "8px",
+                        fontSize: "14px",
+                        border: "1px solid #888",
+                        borderRadius: "4px",
+                        background: "#f0f0f0",
+                        flex: "1"
+                      }}
+                    />
+                    <button onClick={handleStake} style={{
+                      padding: "8px 16px",
+                      background: "#4caf50",
+                      color: "white",
+                      fontWeight: "bold",
+                      border: "none",
+                      borderRadius: "6px",
+                      cursor: "pointer"
+                    }}>
+                      Stake
+                    </button>
+                  </div>
+                  <div style={{ display: "flex", gap: "8px", justifyContent: "center" }}>
+                    {[25, 50, 75, 100].map((percent) => (
+                      <button
+                        key={percent}
+                        onClick={() => setStakePercentage(percent)}
+                        style={{
+                          padding: "6px 12px",
+                          background: "#666",
+                          color: "white",
+                          fontWeight: "bold",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          fontSize: "12px"
+                        }}
+                      >
+                        {percent}%
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
